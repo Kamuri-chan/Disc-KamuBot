@@ -72,6 +72,5 @@ try:
         else:
             await ctx.send(k)
 
-    client.run("NzA2MjEzOTU5ODIwMjQ3MTQw.Xq2_Cw.8fmVHrNQtPeyErMCF7rVMQnygjM")
 except SystemExit:
     print("Encerrado!")
