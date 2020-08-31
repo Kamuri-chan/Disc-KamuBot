@@ -99,6 +99,6 @@ try:
         else:
             await ctx.send("Erro! Não encontrei nada!")
 
-    client.run("NzUwMDIzNjM1NzQ1NjM2Mzgz.X00f8Q.LC_bIRlZOLsRA2gSb4az1N74kTg")
+    client.run("token")
 except SystemExit:
     print("Encerrado!")
