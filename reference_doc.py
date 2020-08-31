@@ -6,7 +6,7 @@ def read_doc(arg):
         chars = []
         for char in range(0, len(string)):
             try:
-                number = int(string[char])
+                int(string[char])
             except Exception:
                 if (string[char] not in unwanted_char):
                     chars.append(string[char])
@@ -23,17 +23,16 @@ def read_doc(arg):
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
 
-    # q = input("O que você quer procurar?? ").strip()
-    q = arg
+    to_find = extract_str(arg, [".", '-'])
 
     results = soup.findAll('li', class_="toctree-l1")
 
     for result in results:
         other_res = result.findAll('li', class_="toctree-l2")
         for element in other_res:
-            if q in element.text:
-                # print(element.text)
-                name = extract_str(element.text, [' ', '.'])
+            f = extract_str(element.text, [' ', '.', '-'])
+            if to_find in f:
+                name = extract_str(element.text, [' ', '.', ','])
                 url_find = element.find('a', href=True)
                 url_find = url_find['href']
 
@@ -43,25 +42,35 @@ def read_doc(arg):
 
     results = soup.findAll('div', id=True)
 
-    findit = ""
+    contents = []
+    n_encontrado = True
+    for result in results:
+        formatted_str = extract_str(result['id'], [' ', '-', '.', ','])
+        if formatted_str == name:
+            n_encontrado = False
+            sections = result.findAll('div', class_="section")
+            for section in sections:
+                contents.append(section.text)
+            findit = result.text
+        elif n_encontrado:
+            if formatted_str == "identifiers":
+                sections = result.findAll('div', class_="section")
+                for section in sections:
+                    contents.append(section.text)
+                findit = result.text
 
-    for i in results:
-        a = extract_str(i['id'], [' ', '-', '.'])
-        if a == name:
-            findit = i
-
-    if (len(findit.text) > 1999):
+    if (len(findit) > 1999):
         k = []
         j = []
-        for i in range(len(findit.text)):
+        for i in range(len(findit)):
             if i < 1000:
-                k.append(findit.text[i])
+                k.append(findit[i])
             else:
-                j.append(findit.text[i])
+                j.append(findit[i])
 
         b = (''.join(k))
         c = (''.join(j))
 
         return (b, c)
     else:
-        return (findit.text)
+        return findit
