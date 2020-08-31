@@ -1,2 +1,3 @@
 # Discord-Python-Documentation-Bot
-A simple Discord bot to search over the Python documentation.
+Um simples bot do Discord para procurar na documentação do Python.
+O bot foi criado com o propósito de aprendizado.
