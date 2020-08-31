@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from reference_doc import read_doc
+from reference_doc import read_doc, grande
 
 
 client = commands.Bot(command_prefix='.')
@@ -9,6 +9,11 @@ try:
     @client.event
     async def on_ready():
         print("Bot is ready")
+
+    @client.command()
+    async def end(ctx):
+        await ctx.send("Encerrado")
+        quit()
 
     @client.command()
     async def ping(ctx):
@@ -66,11 +71,34 @@ try:
     @client.command()
     async def doc(ctx, find):
         k = read_doc(find)
+        print(k)
+
         if (isinstance(k, tuple)):
             for i in k:
-                await ctx.send(i)
+                if len(i) > 2000:
+                    short = grande(i)
+                    for j in short:
+                        await ctx.send(j)
+                else:
+                    await ctx.send(i)
+        elif (isinstance(k, list)):
+            for i in k:
+                if len(i) > 2000:
+                    short = grande(i)
+                    for j in short:
+                        await ctx.send(j)
+                else:
+                    await ctx.send(i)
+        elif (isinstance(k, str)):
+            if len(k) > 2000:
+                short = grande(k)
+                for j in short:
+                    await ctx.send(j)
+            else:
+                await ctx.send(k)
         else:
-            await ctx.send(k)
+            await ctx.send("Erro! Não encontrei nada!")
 
+    client.run("NzUwMDIzNjM1NzQ1NjM2Mzgz.X00f8Q.LC_bIRlZOLsRA2gSb4az1N74kTg")
 except SystemExit:
     print("Encerrado!")
