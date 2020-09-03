@@ -1,3 +1,21 @@
+def print_multiple_str(lista):
+    lista1 = []
+    resto = []
+    i = 0
+    for q in lista:
+        i += 1
+        if i < 2001:
+            lista1.append(q)
+        elif i > 2001:
+            resto.append(q)
+
+    if len(lista) > 0:
+        has_char = True
+    else:
+        has_char = False
+    return lista1, resto, has_char
+
+
 def read_doc(arg):
     from bs4 import BeautifulSoup
     import requests
@@ -16,14 +34,6 @@ def read_doc(arg):
         else:
             return None
 
-    def print_multiple_str(string):
-        full_txt = []
-
-        i = 0
-        while len(full_txt) < len(string):
-            for i in range(len(string)):
-                full_txt.append(string[i])
-                break
     fix_url = "https://docs.python.org/3/reference"
     index = "/index.html"
     url = fix_url + index
@@ -67,37 +77,25 @@ def read_doc(arg):
                         contents.append(section.text)
                     findit = result.text
 
+        to_return = []
         if contents:
             for content in contents:
                 if (len(content) > 2000):
-                    to_return = (print_multiple_str(content))
-                    print("returning to_return")
+                    has_char = True
+                    while has_char:
+                        chars, content, has_char = print_multiple_str(content)
+                        to_return.append(chars)
                     return to_return
                 else:
-                    print("returning contents")
                     return contents
         else:
             if len(findit) > 2000:
-                to_return = (print_multiple_str(findit))
-                print("returning to_return findit")
+                has_char = True
+                while has_char:
+                    chars, findit, has_char = print_multiple_str(findit)
+                    to_return.append(chars)
                 return to_return
             else:
-                print("returning findit")
                 return findit
     except NameError:
         return "Error! Não consegui encontrar nada!"
-
-
-def grande(string):
-    lista1 = []
-    lista2 = []
-    for i in range(len(string)):
-        if i <= 2000:
-            lista1.append(string[i])
-        else:
-            lista2.append(string[i])
-    a = (''.join(lista1))
-    b = (''.join(lista2))
-    print(a, b)
-
-    return (a, b)

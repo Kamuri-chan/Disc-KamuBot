@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from reference_doc import read_doc, grande
+from reference_doc import read_doc, print_multiple_str
 
 
 client = commands.Bot(command_prefix='.')
@@ -70,32 +70,22 @@ try:
 
     @client.command()
     async def doc(ctx, find):
-        k = read_doc(find)
-        print(k)
+        raw_doc = read_doc(find)
 
-        if (isinstance(k, tuple)):
-            for i in k:
-                if len(i) > 2000:
-                    short = grande(i)
-                    for j in short:
-                        await ctx.send(j)
+        if (isinstance(raw_doc, list)):
+            for char in raw_doc:
+                text = (''.join(char))
+                if len(text) > 2000:
+                    resto = text
+                    has_char = True
+                    while has_char:
+                        char, resto, has_char = print_multiple_str(resto)
+                        formmated = (''.join(char))
+                        await ctx.send(formmated)
                 else:
-                    await ctx.send(i)
-        elif (isinstance(k, list)):
-            for i in k:
-                if len(i) > 2000:
-                    short = grande(i)
-                    for j in short:
-                        await ctx.send(j)
-                else:
-                    await ctx.send(i)
-        elif (isinstance(k, str)):
-            if len(k) > 2000:
-                short = grande(k)
-                for j in short:
-                    await ctx.send(j)
-            else:
-                await ctx.send(k)
+                    await ctx.send(text)
+        elif (isinstance(raw_doc, str)):
+            print(raw_doc)
         else:
             await ctx.send("Erro! Não encontrei nada!")
 
