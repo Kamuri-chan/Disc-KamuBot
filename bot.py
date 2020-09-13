@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
 from reference_doc import read_doc, print_multiple_str
+from wiki_search import wikipedia_search
+from search_download import download_vid, video_title, search_vid
+from TOKEN import DISCORD_TOKEN
 
 
 client = commands.Bot(command_prefix='.')
@@ -62,7 +65,10 @@ try:
 
     @client.command()
     async def clear(ctx, amount=1):
-        await ctx.channel.purge(limit=amount)
+        try:
+            await ctx.channel.purge(limit=amount)
+        except Exception:
+            await ctx.send("Faltando permissão!")
 
     @client.command()
     async def kick(ctx, member: discord.Member, *, reason=None):
@@ -89,6 +95,18 @@ try:
         else:
             await ctx.send("Erro! Não encontrei nada!")
 
-    client.run("token")
+    @client.command()
+    async def wiki(ctx, term):
+        raw_result = wikipedia_search(term)
+        await ctx.send(raw_result)
+
+    @client.command()
+    async def play(ctx, *term):
+        term = (' '.join(term))
+        print(term)
+        result, video_ids, titles = search_vid(term)
+        await ctx.send(result)
+
+    client.run(DISCORD_TOKEN)
 except SystemExit:
     print("Encerrado!")
